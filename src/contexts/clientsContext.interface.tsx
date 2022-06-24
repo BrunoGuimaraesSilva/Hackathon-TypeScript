@@ -7,7 +7,13 @@ export interface InterProviderProps {
 
 export interface InterClientContext {
   cep?: CepResponseType;
+  perfil?: Array<PerfilResponseType>;
   getCepData(dados: number): Promise<void>;
+}
+
+export interface PerfilResponseType {
+  id: number,
+  descricao: string
 }
 
 export interface CepResponseType {
@@ -20,5 +26,6 @@ export interface CepResponseType {
   ibge: string;
   gia: string;
   ddd: string;
-  siafi: string
+  siafi: string;
+  erro?: string
 }

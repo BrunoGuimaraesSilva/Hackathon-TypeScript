@@ -5,26 +5,23 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
-  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  Link,
-  SimpleGrid,
   Stack,
-  Textarea,
-  Tooltip,
-  useClipboard,
+  Select,
   useColorModeValue,
+  useToast,
   VStack,
   Wrap,
   WrapItem,
+  Divider
 } from "@chakra-ui/react";
+
 import InputMask from "react-input-mask";
-import React, { useContext } from "react";
-import { BsPerson } from "react-icons/bs";
+import React, { useContext, useEffect, useState } from "react";
+import { BsPerson, BsEye, BsEyeSlash } from "react-icons/bs";
 import {
   MdOutlinePhone,
   MdOutlineEmail,
@@ -37,17 +34,26 @@ import { Footer } from "../../components";
 import { useForm } from "react-hook-form";
 import { ClientContext } from "../../contexts";
 import { CheckIcon } from "@chakra-ui/icons";
-
+import uf from "../../assets/uf.json";
 export default function Form() {
-  const { cep, getCepData } = useContext(ClientContext);
+  const { cep,perfil, getCepData } = useContext(ClientContext);
+  const [disableButton, setDisableButton] = useState<boolean>(true);
+  const toast = useToast();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const clickButtonShowPassword = () => setShowPassword(!showPassword);
 
   const {
     handleSubmit,
     register,
+    setValue,
+    getValues,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm();
 
   function onSubmit(values: any) {
+    console.log(values)
+
     return new Promise<void>((resolve) => {
       setTimeout(() => {
         alert(JSON.stringify(values, null, 2));
@@ -56,11 +62,33 @@ export default function Form() {
     });
   }
 
-  function searchCep() {
+  useEffect(() => {
+    setValue("city", cep?.localidade ?? "", { shouldValidate: cep?.localidade ? true : false });
+    setValue("neighborhood", cep?.bairro ?? "", { shouldValidate: cep?.bairro ? true : false });
+    setValue("address", cep?.logradouro ?? "", { shouldValidate:cep?.logradouro ? true : false });
+    setValue("state", cep?.uf ?? "", { shouldValidate: cep?.uf ? true : false });
     
-  }
+    if (!!cep?.erro) {
+      toast({
+        title: "Cep Inválido",
+        description: "Digite um cep valido!",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [cep]);
 
-  console.log(errors);
+  useEffect(() => {
+    const value = getValues("cep");
+    if (value) {
+      if (value.indexOf("_") == -1) {
+        setDisableButton(false);
+      } else {
+        setDisableButton(true);
+      }
+    }
+  }, [watch()]);
 
   return (
     <>
@@ -101,30 +129,15 @@ export default function Form() {
                                 placeholder="Seu Nome"
                                 {...register("name", {
                                   required: "Preencha o campo de Nome",
+                                  minLength: {
+                                    value: 4,
+                                    message: "Preencha corretamente o campo",
+                                  },
                                 })}
                               />
                             </InputGroup>
                             <FormErrorMessage>
                               {errors.name && errors.name.message}
-                            </FormErrorMessage>
-                          </FormControl>
-                        </WrapItem>
-
-                        <WrapItem w={"250px"} h={"100px"}>
-                          <FormControl isInvalid={errors.email}>
-                            <FormLabel>Email</FormLabel>
-                            <InputGroup>
-                              <InputLeftElement children={<MdOutlineEmail />} />
-                              <Input
-                                type="email"
-                                placeholder="Seu Email"
-                                {...register("email", {
-                                  required: "Preencha o campo de E-mail",
-                                })}
-                              />
-                            </InputGroup>
-                            <FormErrorMessage>
-                              {errors.email && errors.email.message}
                             </FormErrorMessage>
                           </FormControl>
                         </WrapItem>
@@ -140,6 +153,10 @@ export default function Form() {
                                 mask="(99) 99999-9999"
                                 {...register("phone", {
                                   required: "Preencha o campo de Telefone",
+                                  minLength: {
+                                    value: 4,
+                                    message: "Preencha corretamente o campo",
+                                  },
                                 })}
                               />
                             </InputGroup>
@@ -171,6 +188,8 @@ export default function Form() {
                           </FormControl>
                         </WrapItem>
 
+                        <Divider orientation='horizontal' />
+
                         <WrapItem w={"250px"} h={"100px"}>
                           <FormControl isInvalid={errors.cep}>
                             <FormLabel>CEP</FormLabel>
@@ -184,10 +203,17 @@ export default function Form() {
                                 mask="99999-999"
                                 {...register("cep", {
                                   required: "Preencha o campo de CEP",
+                                  minLength: 9,
                                 })}
                               />
                               <InputRightElement width="4.5rem">
-                                <Button size="sm" onClick={(data) => console.log(data)}>
+                                <Button
+                                  disabled={disableButton}
+                                  size="sm"
+                                  onClick={() => {
+                                    getCepData(getValues("cep"));
+                                  }}
+                                >
                                   <CheckIcon color="green.500" />
                                 </Button>
                               </InputRightElement>
@@ -214,6 +240,28 @@ export default function Form() {
                             </InputGroup>
                             <FormErrorMessage>
                               {errors.city && errors.city.message}
+                            </FormErrorMessage>
+                          </FormControl>
+                        </WrapItem>
+
+                        <WrapItem w={"250px"} h={"100px"}>
+                          <FormControl isInvalid={errors.state}>
+                            <FormLabel>Estado</FormLabel>
+                            <InputGroup>
+                              <Select
+                                id="country"
+                                placeholder="Selecione seu estado"
+                                {...register("state", {
+                                  required: "Selecione o seu Estado",
+                                })}
+                              >
+                                {uf.map((data) => {
+                                  return <option id={data.id} value={data.initials}>{data.name}</option>;
+                                })}
+                              </Select>
+                            </InputGroup>
+                            <FormErrorMessage>
+                              {errors.state && errors.state.message}
                             </FormErrorMessage>
                           </FormControl>
                         </WrapItem>
@@ -274,6 +322,78 @@ export default function Form() {
                             </FormErrorMessage>
                           </FormControl>
                         </WrapItem>
+
+                        <Divider orientation='horizontal' />
+
+                        <WrapItem w={"250px"} h={"100px"}>
+                          <FormControl isInvalid={errors.email}>
+                            <FormLabel>Email</FormLabel>
+                            <InputGroup>
+                              <InputLeftElement children={<MdOutlineEmail />} />
+                              <Input
+                                type="email"
+                                placeholder="Seu Email"
+                                {...register("email", {
+                                  required: "Preencha o campo de E-mail",
+                                })}
+                              />
+                            </InputGroup>
+                            <FormErrorMessage>
+                              {errors.email && errors.email.message}
+                            </FormErrorMessage>
+                          </FormControl>
+                        </WrapItem>
+
+                        <WrapItem w={"250px"} h={"100px"}>
+                          <FormControl isInvalid={errors.password}>
+                            <FormLabel>Senha</FormLabel>
+                            <InputGroup>
+                              <InputLeftElement children={<MdOutlineEmail />} />
+                              <Input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Sua Senha"
+                                {...register("password", {
+                                  required: "Preencha o campo de senha",
+                                })}
+                              />
+                              <InputRightElement width="4.5rem">
+                                <Button
+                                  h="1.75rem"
+                                  size="sm"
+                                  onClick={clickButtonShowPassword}
+                                >
+                                  {showPassword ? <BsEyeSlash /> : <BsEye />}
+                                </Button>
+                              </InputRightElement>
+                            </InputGroup>
+                            <FormErrorMessage>
+                              {errors.password && errors.password.message}
+                            </FormErrorMessage>
+                          </FormControl>
+                        </WrapItem>
+
+                        <WrapItem w={"250px"} h={"100px"}>
+                          <FormControl isInvalid={errors.profile}>
+                            <FormLabel>Perfil</FormLabel>
+                            <InputGroup>
+                              <Select
+                                id="profile"
+                                placeholder="Selecione seu perfil"
+                                {...register("profile", {
+                                  required: "Selecione o seu perfil",
+                                })}
+                              >
+                                {perfil?.map((data) => {
+                                  return <option id={`${data.id}`} value={data.id}>{data.descricao}</option>;
+                                })}
+                              </Select>
+                            </InputGroup>
+                            <FormErrorMessage>
+                              {errors.profile && errors.profile.message}
+                            </FormErrorMessage>
+                          </FormControl>
+                        </WrapItem>
+
                       </Wrap>
 
                       <Button
@@ -286,7 +406,7 @@ export default function Form() {
                           bg: "blue.500",
                         }}
                       >
-                        Send Message
+                        Cadastrar
                       </Button>
                     </form>
                   </VStack>

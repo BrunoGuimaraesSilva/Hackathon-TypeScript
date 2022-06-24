@@ -1,0 +1,164 @@
+[
+  {
+    "id": "11",
+    "initials": "RO",
+    "name": "Rondônia",
+    "region": { "id": "1", "initials": "N", "name": "Norte" }
+  },
+  {
+    "id": "12",
+    "initials": "AC",
+    "name": "Acre",
+    "region": { "id": "1", "initials": "N", "name": "Norte" }
+  },
+  {
+    "id": "13",
+    "initials": "AM",
+    "name": "Amazonas",
+    "region": { "id": "1", "initials": "N", "name": "Norte" }
+  },
+  {
+    "id": "14",
+    "initials": "RR",
+    "name": "Roraima",
+    "region": { "id": "1", "initials": "N", "name": "Norte" }
+  },
+  {
+    "id": "15",
+    "initials": "PA",
+    "name": "Pará",
+    "region": { "id": "1", "initials": "N", "name": "Norte" }
+  },
+  {
+    "id": "16",
+    "initials": "AP",
+    "name": "Amapá",
+    "region": { "id": "1", "initials": "N", "name": "Norte" }
+  },
+  {
+    "id": "17",
+    "initials": "TO",
+    "name": "Tocantins",
+    "region": { "id": "1", "initials": "N", "name": "Norte" }
+  },
+  {
+    "id": "21",
+    "initials": "MA",
+    "name": "Maranhão",
+    "region": { "id": "2", "initials": "NE", "name": "Nordeste" }
+  },
+  {
+    "id": "22",
+    "initials": "PI",
+    "name": "Piauí",
+    "region": { "id": "2", "initials": "NE", "name": "Nordeste" }
+  },
+  {
+    "id": "23",
+    "initials": "CE",
+    "name": "Ceará",
+    "region": { "id": "2", "initials": "NE", "name": "Nordeste" }
+  },
+  {
+    "id": "24",
+    "initials": "RN",
+    "name": "Rio Grande do Norte",
+    "region": { "id": "2", "initials": "NE", "name": "Nordeste" }
+  },
+  {
+    "id": "25",
+    "initials": "PB",
+    "name": "Paraíba",
+    "region": { "id": "2", "initials": "NE", "name": "Nordeste" }
+  },
+  {
+    "id": "26",
+    "initials": "PE",
+    "name": "Pernambuco",
+    "region": { "id": "2", "initials": "NE", "name": "Nordeste" }
+  },
+  {
+    "id": "27",
+    "initials": "AL",
+    "name": "Alagoas",
+    "region": { "id": "2", "initials": "NE", "name": "Nordeste" }
+  },
+  {
+    "id": "28",
+    "initials": "SE",
+    "name": "Sergipe",
+    "region": { "id": "2", "initials": "NE", "name": "Nordeste" }
+  },
+  {
+    "id": "29",
+    "initials": "BA",
+    "name": "Bahia",
+    "region": { "id": "2", "initials": "NE", "name": "Nordeste" }
+  },
+  {
+    "id": "31",
+    "initials": "MG",
+    "name": "Minas Gerais",
+    "region": { "id": "3", "initials": "SE", "name": "Sudeste" }
+  },
+  {
+    "id": "32",
+    "initials": "ES",
+    "name": "Espírito Santo",
+    "region": { "id": "3", "initials": "SE", "name": "Sudeste" }
+  },
+  {
+    "id": "33",
+    "initials": "RJ",
+    "name": "Rio de Janeiro",
+    "region": { "id": "3", "initials": "SE", "name": "Sudeste" }
+  },
+  {
+    "id": "35",
+    "initials": "SP",
+    "name": "São Paulo",
+    "region": { "id": "3", "initials": "SE", "name": "Sudeste" }
+  },
+  {
+    "id": "41",
+    "initials": "PR",
+    "name": "Paraná",
+    "region": { "id": "4", "initials": "S", "name": "Sul" }
+  },
+  {
+    "id": "42",
+    "initials": "SC",
+    "name": "Santa Catarina",
+    "region": { "id": "4", "initials": "S", "name": "Sul" }
+  },
+  {
+    "id": "43",
+    "initials": "RS",
+    "name": "Rio Grande do Sul",
+    "region": { "id": "4", "initials": "S", "name": "Sul" }
+  },
+  {
+    "id": "50",
+    "initials": "MS",
+    "name": "Mato Grosso do Sul",
+    "region": { "id": "5", "initials": "CO", "name": "Centro-Oeste" }
+  },
+  {
+    "id": "51",
+    "initials": "MT",
+    "name": "Mato Grosso",
+    "region": { "id": "5", "initials": "CO", "name": "Centro-Oeste" }
+  },
+  {
+    "id": "52",
+    "initials": "GO",
+    "name": "Goiás",
+    "region": { "id": "5", "initials": "CO", "name": "Centro-Oeste" }
+  },
+  {
+    "id": "53",
+    "initials": "DF",
+    "name": "Distrito Federal",
+    "region": { "id": "5", "initials": "CO", "name": "Centro-Oeste" }
+  }
+]

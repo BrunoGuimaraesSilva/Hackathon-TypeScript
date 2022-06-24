@@ -5,22 +5,31 @@ import {
   CepResponseType,
   InterClientContext,
   InterProviderProps,
+  PerfilResponseType,
 } from "./clientsContext.interface";
 
 export const ClientContext = createContext({} as InterClientContext);
 
 export function ClientProvider({ children }: InterProviderProps) {
+  const jsonPerfil = [
+    { id: 1, descricao: "Admin" },
+    { id: 2, descricao: "Cliente" },
+  ];
+
   const router = useRouter();
   const [cep, setCep] = useState<CepResponseType>();
+  const [perfil, setPerfil] = useState<Array<PerfilResponseType>>(jsonPerfil);
 
   //   useEffect(() => {
-
+  //      axios.get(`https://viacep.com.br/ws/${cep}/json/`).then((res) => {
+  //        setCep(res.data)
+  //      });
   //   }, []);
 
-  async function getCepData(cep: number) {
+  async function getCepData(cep: number): Promise<void> {
     try {
-      axios.get(`https://viacep.com.br/ws/${cep}/json/`).then((res) => {
-        console.log(res);
+      axios.get(`https://viacep.com.br/ws/${cep}/json/`).then((res):void => {
+        setCep(res.data);
       });
     } catch (error) {}
   }
@@ -29,6 +38,7 @@ export function ClientProvider({ children }: InterProviderProps) {
     <ClientContext.Provider
       value={{
         cep,
+        perfil,
         getCepData,
       }}
     >

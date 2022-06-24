@@ -9,8 +9,11 @@ import {
   Tag,
   useColorModeValue,
   useColorMode,
+  Center
 } from "@chakra-ui/react";
+import Image from "next/image";
 import { ReactNode } from "react";
+import logo from "../../assets/logo.svg";
 
 export function Footer() {
   return (
@@ -35,7 +38,11 @@ export function Footer() {
             flexGrow: 1,
             ml: 8,
           }}
-        ></Flex>
+        >
+          <Center justifyContent={"center"} w="80px">
+              <Image alt="" src={logo} />
+            </Center>
+        </Flex>
         <Text pt={6} fontSize={"sm"} textAlign={"center"}>
           © 2022 BBL. All rights reserved
         </Text>

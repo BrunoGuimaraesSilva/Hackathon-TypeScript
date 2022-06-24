@@ -6,14 +6,30 @@ import {
   Heading,
   Input,
   Stack,
-  Image,
+  Center,
+  Image as ImageChakra
 } from "@chakra-ui/react";
+
+import Image from "next/image";
+
+import logo from "../../assets/logo.svg";
 
 export default function Login() {
   return (
     <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
       <Flex p={8} flex={1} align={"center"} justify={"center"}>
-        <Stack spacing={4} w={"full"} maxW={"md"}>
+   <Center>
+
+        <Stack spacing={4} h={"full"} w={"full"} maxW={"900px"}>
+
+         <Flex
+          align={"center"}
+          
+        >
+          <Center justifyContent={"center"} w="80px">
+              <Image alt="" src={logo} />
+            </Center>
+        </Flex>
           <Heading fontSize={"2xl"}>Login</Heading>
           <FormControl id="email">
             <FormLabel>E-mail</FormLabel>
@@ -29,9 +45,10 @@ export default function Login() {
             </Button>
           </Stack>
         </Stack>
+        </Center>
       </Flex>
       <Flex flex={1}>
-        <Image
+        <ImageChakra
           alt={"Login Image"}
           objectFit={"cover"}
           src={
