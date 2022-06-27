@@ -12,8 +12,10 @@ import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
 import Image from "next/image";
 import { GButton, GIconButton } from "../Button";
 import logo from '../../assets/logo.svg'
+import { useRouter } from "next/router";
 export const Header: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
 
   return (
     <>
@@ -38,7 +40,13 @@ export const Header: React.FC = () => {
             alignItems={"center"}
           >
             <Box display={{ base: "none", md: "unset" }}>
-              <GButton>Cadastar</GButton>
+              
+            <Stack direction='row' spacing={4} align='center'>
+
+              <GButton onClick={() => {router.push('/cadastro')}}>Cadastrar</GButton>
+              <GButton onClick={() => {router.push('/dashboard')}}>Dashboard</GButton>
+              <GButton onClick={() => {router.push('/listagem')}}>Lista</GButton>
+              </Stack>
             </Box>
           </Box>
         </Flex>
@@ -47,7 +55,11 @@ export const Header: React.FC = () => {
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
               <Box zIndex={150} alignItems={"center"}>
-              <GButton w={'full'}>Cadastar</GButton>
+              <GButton mb={5} w={'full'} onClick={() => {router.push('/cadastro')}}>Cadastar</GButton>
+              <GButton mb={5} w={'full'} onClick={() => {router.push('/dashboard')}}>Dashboard</GButton>
+              <GButton mb={5} w={'full'} onClick={() => {router.push('/listagem')}}>Lista de Clientes</GButton>
+
+
               </Box>
             </Stack>
           </Box>

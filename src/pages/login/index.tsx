@@ -7,44 +7,116 @@ import {
   Input,
   Stack,
   Center,
-  Image as ImageChakra
+  Image as ImageChakra,
+  InputGroup,
+  InputLeftElement,
+  FormErrorMessage,
+  InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 
 import Image from "next/image";
+import { useForm } from "react-hook-form";
 
 import logo from "../../assets/logo.svg";
+import { BsEye, BsEyeSlash, BsPerson } from "react-icons/bs";
+import { MdOutlineEmail } from "react-icons/md";
+import { useContext, useState } from "react";
+import { ClientContext } from "../../contexts";
 
 export default function Login() {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const clickButtonShowPassword = () => setShowPassword(!showPassword);
+  const { login } = useContext(ClientContext);
+
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    getValues,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm();
+
+  async function onSubmit(data: any) {
+    login(data.email, data.password);
+  }
+
   return (
     <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
       <Flex p={8} flex={1} align={"center"} justify={"center"}>
-   <Center>
+        <Center>
+          <Stack spacing={4} h={"full"} w={"full"} maxW={"900px"}>
+            <Flex align={"center"}>
+              <Center w="80px">
+                <Image alt="" src={logo} />
+              </Center>
+            </Flex>
+            <Heading fontSize={"2xl"}>Login</Heading>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FormControl h={"100px"} isInvalid={errors.email}>
+                <FormLabel>Email</FormLabel>
+                <InputGroup>
+                  <InputLeftElement>
+                    <MdOutlineEmail />
+                  </InputLeftElement>
+                  <Input
+                    type="email"
+                    placeholder="Seu Email"
+                    {...register("email", {
+                      required: "Preencha o campo de E-mail",
+                    })}
+                  />
+                </InputGroup>
+                <FormErrorMessage>
+                  {errors.email && errors.email.message}
+                </FormErrorMessage>
+              </FormControl>
 
-        <Stack spacing={4} h={"full"} w={"full"} maxW={"900px"}>
-
-         <Flex
-          align={"center"}
-          
-        >
-          <Center justifyContent={"center"} w="80px">
-              <Image alt="" src={logo} />
-            </Center>
-        </Flex>
-          <Heading fontSize={"2xl"}>Login</Heading>
-          <FormControl id="email">
-            <FormLabel>E-mail</FormLabel>
-            <Input type="email" />
-          </FormControl>
-          <FormControl id="password">
-            <FormLabel>Senha</FormLabel>
-            <Input type="password" />
-          </FormControl>
-          <Stack spacing={6}>
-            <Button colorScheme={"blue"} variant={"solid"}>
-              Entrar
-            </Button>
+              <FormControl h={"100px"} isInvalid={errors.password}>
+                <FormLabel>Senha</FormLabel>
+                <InputGroup>
+                  <InputLeftElement>
+                    <MdOutlineEmail />
+                  </InputLeftElement>
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Sua Senha"
+                    {...register("password", {
+                      required: "Preencha o campo de senha",
+                    })}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button
+                      h="1.75rem"
+                      size="sm"
+                      onClick={clickButtonShowPassword}
+                    >
+                      {showPassword ? <BsEyeSlash /> : <BsEye />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+                <FormErrorMessage>
+                  {errors.password && errors.password.message}
+                </FormErrorMessage>
+              </FormControl>
+              <Stack spacing={6}>
+                <Button
+                  mt={15}
+                  colorScheme="blue"
+                  bg="blue.400"
+                  color="white"
+                  isLoading={isSubmitting}
+                  type="submit"
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                >
+                  Login
+                </Button>
+              </Stack>
+            </form>
           </Stack>
-        </Stack>
         </Center>
       </Flex>
       <Flex flex={1}>

@@ -16,7 +16,7 @@ import {
   VStack,
   Wrap,
   WrapItem,
-  Divider
+  Divider,
 } from "@chakra-ui/react";
 
 import InputMask from "react-input-mask";
@@ -30,17 +30,18 @@ import {
   MdOutlineStreetview,
   MdOutlineHouse,
 } from "react-icons/md";
-import { Footer } from "../../components";
+import { Footer, Header } from "../../components";
 import { useForm } from "react-hook-form";
 import { ClientContext } from "../../contexts";
 import { CheckIcon } from "@chakra-ui/icons";
 import uf from "../../assets/uf.json";
 export default function Form() {
-  const { cep,perfil, getCepData } = useContext(ClientContext);
+  const { cep, perfil, getCepData, createUser, getProfile } =
+    useContext(ClientContext);
   const [disableButton, setDisableButton] = useState<boolean>(true);
-  const toast = useToast();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const clickButtonShowPassword = () => setShowPassword(!showPassword);
+  const toast = useToast();
 
   const {
     handleSubmit,
@@ -51,23 +52,28 @@ export default function Form() {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  function onSubmit(values: any) {
-    console.log(values)
-
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve();
-      }, 3000);
-    });
+  async function onSubmit(data: any): Promise<void> {
+    createUser(data);
   }
 
   useEffect(() => {
-    setValue("city", cep?.localidade ?? "", { shouldValidate: cep?.localidade ? true : false });
-    setValue("neighborhood", cep?.bairro ?? "", { shouldValidate: cep?.bairro ? true : false });
-    setValue("address", cep?.logradouro ?? "", { shouldValidate:cep?.logradouro ? true : false });
-    setValue("state", cep?.uf ?? "", { shouldValidate: cep?.uf ? true : false });
-    
+    getProfile();
+  }, []);
+
+  useEffect(() => {
+    setValue("city", cep?.localidade ?? "", {
+      shouldValidate: cep?.localidade ? true : false,
+    });
+    setValue("neighborhood", cep?.bairro ?? "", {
+      shouldValidate: cep?.bairro ? true : false,
+    });
+    setValue("address", cep?.logradouro ?? "", {
+      shouldValidate: cep?.logradouro ? true : false,
+    });
+    setValue("state", cep?.uf ?? "", {
+      shouldValidate: cep?.uf ? true : false,
+    });
+
     if (!!cep?.erro) {
       toast({
         title: "Cep Inválido",
@@ -92,6 +98,7 @@ export default function Form() {
 
   return (
     <>
+      <Header />
       <Flex
         bg={useColorModeValue("gray.100", "gray.900")}
         align="center"
@@ -123,7 +130,9 @@ export default function Form() {
                           <FormControl isInvalid={errors.name}>
                             <FormLabel>Nome</FormLabel>
                             <InputGroup>
-                              <InputLeftElement children={<BsPerson />} />
+                              <InputLeftElement>
+                                <BsPerson />
+                              </InputLeftElement>
                               <Input
                                 id="name"
                                 placeholder="Seu Nome"
@@ -146,7 +155,9 @@ export default function Form() {
                           <FormControl isInvalid={errors.phone}>
                             <FormLabel>Telefone</FormLabel>
                             <InputGroup>
-                              <InputLeftElement children={<MdOutlinePhone />} />
+                              <InputLeftElement>
+                                <MdOutlinePhone />
+                              </InputLeftElement>
                               <Input
                                 as={InputMask}
                                 placeholder="Seu Telefone"
@@ -170,9 +181,9 @@ export default function Form() {
                           <FormControl isInvalid={errors.cpf}>
                             <FormLabel>CPF</FormLabel>
                             <InputGroup>
-                              <InputLeftElement
-                                children={<MdOutlineDocumentScanner />}
-                              />
+                              <InputLeftElement>
+                                <MdOutlineDocumentScanner />
+                              </InputLeftElement>
                               <Input
                                 as={InputMask}
                                 placeholder="Seu CPF"
@@ -188,15 +199,15 @@ export default function Form() {
                           </FormControl>
                         </WrapItem>
 
-                        <Divider orientation='horizontal' />
+                        <Divider orientation="horizontal" />
 
                         <WrapItem w={"250px"} h={"100px"}>
                           <FormControl isInvalid={errors.cep}>
                             <FormLabel>CEP</FormLabel>
                             <InputGroup>
-                              <InputLeftElement
-                                children={<MdOutlineLocationCity />}
-                              />
+                              <InputLeftElement>
+                                <MdOutlineLocationCity />
+                              </InputLeftElement>
                               <Input
                                 as={InputMask}
                                 placeholder="Seu CEP"
@@ -228,9 +239,9 @@ export default function Form() {
                           <FormControl isInvalid={errors.city}>
                             <FormLabel>Cidade</FormLabel>
                             <InputGroup>
-                              <InputLeftElement
-                                children={<MdOutlineLocationCity />}
-                              />
+                              <InputLeftElement>
+                                <MdOutlineLocationCity />
+                              </InputLeftElement>
                               <Input
                                 placeholder="Seu Cidade"
                                 {...register("city", {
@@ -256,7 +267,15 @@ export default function Form() {
                                 })}
                               >
                                 {uf.map((data) => {
-                                  return <option id={data.id} value={data.initials}>{data.name}</option>;
+                                  return (
+                                    <option
+                                      key={data.id}
+                                      id={data.id}
+                                      value={data.initials}
+                                    >
+                                      {data.name}
+                                    </option>
+                                  );
                                 })}
                               </Select>
                             </InputGroup>
@@ -270,7 +289,9 @@ export default function Form() {
                           <FormControl isInvalid={errors.address}>
                             <FormLabel>Endereço</FormLabel>
                             <InputGroup>
-                              <InputLeftElement children={<MdOutlineHouse />} />
+                              <InputLeftElement>
+                                <MdOutlineHouse />
+                              </InputLeftElement>
                               <Input
                                 placeholder="Seu Endereço"
                                 {...register("address", {
@@ -288,7 +309,9 @@ export default function Form() {
                           <FormControl isInvalid={errors.neighborhood}>
                             <FormLabel>Bairro</FormLabel>
                             <InputGroup>
-                              <InputLeftElement children={<MdOutlineHouse />} />
+                              <InputLeftElement>
+                                <MdOutlineHouse />
+                              </InputLeftElement>
                               <Input
                                 placeholder="Seu Bairro"
                                 {...register("neighborhood", {
@@ -307,9 +330,9 @@ export default function Form() {
                           <FormControl isInvalid={errors.houseNumber}>
                             <FormLabel>Número</FormLabel>
                             <InputGroup>
-                              <InputLeftElement
-                                children={<MdOutlineStreetview />}
-                              />
+                              <InputLeftElement>
+                                <MdOutlineStreetview />
+                              </InputLeftElement>
                               <Input
                                 placeholder="Seu Número"
                                 {...register("houseNumber", {
@@ -323,13 +346,15 @@ export default function Form() {
                           </FormControl>
                         </WrapItem>
 
-                        <Divider orientation='horizontal' />
+                        <Divider orientation="horizontal" />
 
                         <WrapItem w={"250px"} h={"100px"}>
                           <FormControl isInvalid={errors.email}>
                             <FormLabel>Email</FormLabel>
                             <InputGroup>
-                              <InputLeftElement children={<MdOutlineEmail />} />
+                              <InputLeftElement>
+                                <MdOutlineEmail />
+                              </InputLeftElement>
                               <Input
                                 type="email"
                                 placeholder="Seu Email"
@@ -348,7 +373,9 @@ export default function Form() {
                           <FormControl isInvalid={errors.password}>
                             <FormLabel>Senha</FormLabel>
                             <InputGroup>
-                              <InputLeftElement children={<MdOutlineEmail />} />
+                              <InputLeftElement>
+                                <MdOutlineEmail />
+                              </InputLeftElement>
                               <Input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Sua Senha"
@@ -384,7 +411,15 @@ export default function Form() {
                                 })}
                               >
                                 {perfil?.map((data) => {
-                                  return <option id={`${data.id}`} value={data.id}>{data.descricao}</option>;
+                                  return (
+                                    <option
+                                      key={data.id}
+                                      id={`${data.id}`}
+                                      value={data.id}
+                                    >
+                                      {data.descricao}
+                                    </option>
+                                  );
                                 })}
                               </Select>
                             </InputGroup>
@@ -393,7 +428,6 @@ export default function Form() {
                             </FormErrorMessage>
                           </FormControl>
                         </WrapItem>
-
                       </Wrap>
 
                       <Button
