@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const token = cookies.token;
   const theme = extendTheme({
     config: {
-      useSystemColorMode: true,
+      useSystemColorMode: false,
       initialColorMode: "dark",
     },
   });
@@ -36,6 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   useEffect(() => {
+  localStorage.setItem("chakra-ui-color-mode","dark");
     if (router.pathname == "/login") {
       if (validatedToken(token)) {
         setAuthorized(true);
