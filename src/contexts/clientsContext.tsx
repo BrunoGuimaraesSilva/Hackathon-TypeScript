@@ -9,7 +9,7 @@ import {
   PerfilResponseType,
   UserTypePtBr,
 } from "./clientsContext.interface";
-import { setCookie } from "nookies";
+import { parseCookies, setCookie } from "nookies";
 import { useToast } from "@chakra-ui/react";
 import { arrayConverterPtBrtoEng, converterEngToPtBr, defaultUserFormData } from "../utils/client";
 export const ClientContext = createContext({} as InterClientContext);
@@ -22,11 +22,16 @@ export function ClientProvider({ children }: InterProviderProps) {
   const [perfil, setPerfil] = useState<Array<PerfilResponseType>>();
   const [users, setUsers] = useState<Array<UserTypeEng>>();
   const [clientToEdit, setClientToEdit ] = useState<UserTypeEng>();
+  const cookies = parseCookies();
+  const token = cookies.token;
 
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+};
 
   async function getProfile(): Promise<void> {
     try {
-      axios.get(`${urlApi}/perfil`).then((res): void => {
+      axios.get(`${urlApi}/perfil`, config).then((res): void => {
         setPerfil(res.data);
       });
     } catch (error) {}
@@ -64,11 +69,29 @@ export function ClientProvider({ children }: InterProviderProps) {
       });
   }
 
+  async function getAllUsers(): Promise<void> {
+    axios
+      .get(`${urlApi}/clientes`, config)
+      .then((res): void => {
+        const data: Array<UserTypePtBr> = res.data;
+        setUsers(arrayConverterPtBrtoEng(data));
+      })
+      .catch(function (error) {
+        toast({
+          title: "Erro",
+          description: error.response.data ?? "Erro ao buscar",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
+  }
+
   async function createUser(data: UserTypeEng): Promise<void> {
 
     const body = converterEngToPtBr(data) 
     axios
-      .post(`${urlApi}/clientes`, body)
+      .post(`${urlApi}/clientes`, body, config)
       .then((res): void => {
         router.push("/dashboard");
       })
@@ -87,7 +110,7 @@ export function ClientProvider({ children }: InterProviderProps) {
     const body = converterEngToPtBr(data) 
 
     axios
-      .put(`${urlApi}/clientes/${data.id}`, body)
+      .put(`${urlApi}/clientes/${data.id}`, body, config)
       .then((res): void => {
         setClientToEdit(defaultUserFormData)
         router.push("/dashboard");
@@ -110,26 +133,27 @@ export function ClientProvider({ children }: InterProviderProps) {
       });
   }
 
-  async function getAllUsers(): Promise<void> {
-    axios
-      .get(`${urlApi}/clientes`)
-      .then((res): void => {
-        const data: Array<UserTypePtBr> = res.data;
-        setUsers(arrayConverterPtBrtoEng(data));
-      })
-      .catch(function (error) {
-        toast({
-          title: "Erro",
-          description: error.response.data ?? "Erro ao buscar",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
+  async function deleteUser(id: number): Promise<void> {
+    axios.delete(`${urlApi}/clientes/${id}`, config).then((res): void => {
+      getAllUsers()
+      toast({
+        title: "Sucesso",
+        description: res.data ?? "Sucesso",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
       });
+    })
+    .catch(function (error) {
+      toast({
+        title: "Erro",
+        description: error.response.data ?? "Erro ao apagar",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    });
   }
-
-  
-
 
   return (
     <ClientContext.Provider
@@ -144,6 +168,7 @@ export function ClientProvider({ children }: InterProviderProps) {
         login,
         createUser,
         editUser,
+        deleteUser,
         getProfile,
       }}
     >

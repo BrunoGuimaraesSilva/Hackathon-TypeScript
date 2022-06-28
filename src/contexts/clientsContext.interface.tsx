@@ -15,7 +15,9 @@ export interface InterClientContext {
   login(login: string, password: string): Promise<any>;
   createUser(data: UserTypeEng): Promise<void>;
   editUser(data: UserTypeEng): Promise<void>;
+  deleteUser(id: number): Promise<void>;
   getProfile(): Promise<void>;
+  
 }
 
 export interface PerfilResponseType {

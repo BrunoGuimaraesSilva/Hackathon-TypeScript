@@ -2,18 +2,25 @@ import {
   Button,
   ButtonGroup,
   Flex,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Table,
   TableCaption,
   TableContainer,
   Tbody,
   Td,
-  Tfoot,
+  Text,
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Header } from "../../components";
 import { ClientContext, UserTypeEng } from "../../contexts";
 import {
@@ -26,21 +33,44 @@ import { GButton } from "./../../components/Button/GButton";
 
 export default function Listagem() {
   const router = useRouter();
-  const { users, getAllUsers, setClientToEdit } = useContext(ClientContext);
+  const { users, getAllUsers, setClientToEdit, deleteUser } = useContext(ClientContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [ idDeleteUser, setIdDeleteUser ] = useState<number>()
+
   useEffect(() => {
     getAllUsers();
   }, []);
 
   function handleClickEditar(data: UserTypeEng): void {
-    setClientToEdit(data)
-    router.push('/cadastro')
+    setClientToEdit(data);
+    router.push("/cadastro");
   }
+
   function handleClickApagar(data: UserTypeEng): void {
-    console.log(data)
+    onOpen()
+    setIdDeleteUser(data?.id ? data.id : 0)
   }
 
   return (
     <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Apagar o usuário</ModalHeader>
+          <ModalBody pb={6}>
+          <Text fontWeight='bold' mb='1rem'>
+              Tem certeza que deseja apagar o usuário?
+            </Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="red" onClick={():Promise<void> => (onClose(), deleteUser(idDeleteUser))} mr={3}>
+              Sim
+            </Button>
+            <Button colorScheme="blue" onClick={onClose}>Não</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       <Header />
       <Flex>
         <TableContainer>
@@ -75,7 +105,7 @@ export default function Listagem() {
                         <ButtonGroup size="sm" isAttached variant="outline">
                           <GButton
                             colorScheme="yellow"
-                            onClick={():void => {
+                            onClick={(): void => {
                               handleClickEditar(data);
                             }}
                           >
@@ -83,7 +113,7 @@ export default function Listagem() {
                           </GButton>
                           <GButton
                             colorScheme="red"
-                            onClick={():void => {
+                            onClick={(): void => {
                               handleClickApagar(data);
                             }}
                           >
