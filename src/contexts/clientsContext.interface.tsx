@@ -8,10 +8,13 @@ export interface InterClientContext {
   cep?: CepResponseType;
   perfil?: Array<PerfilResponseType>;
   users?: Array<UserTypeEng>;
+  clientToEdit?: UserTypeEng;
+  setClientToEdit(dados: UserTypeEng):void;
   getCepData(dados: number): Promise<void>;
   getAllUsers(): Promise<void>;
   login(login: string, password: string): Promise<any>;
   createUser(data: UserTypeEng): Promise<void>;
+  editUser(data: UserTypeEng): Promise<void>;
   getProfile(): Promise<void>;
 }
 

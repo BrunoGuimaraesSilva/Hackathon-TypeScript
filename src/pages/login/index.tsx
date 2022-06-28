@@ -20,7 +20,7 @@ import { useForm } from "react-hook-form";
 
 import logo from "../../assets/logo.svg";
 import { BsEye, BsEyeSlash, BsPerson } from "react-icons/bs";
-import { MdOutlineEmail } from "react-icons/md";
+import { MdLockOutline, MdOutlineEmail } from "react-icons/md";
 import { useContext, useState } from "react";
 import { ClientContext } from "../../contexts";
 
@@ -77,7 +77,7 @@ export default function Login() {
                 <FormLabel>Senha</FormLabel>
                 <InputGroup>
                   <InputLeftElement>
-                    <MdOutlineEmail />
+                    <MdLockOutline />
                   </InputLeftElement>
                   <Input
                     type={showPassword ? "text" : "password"}

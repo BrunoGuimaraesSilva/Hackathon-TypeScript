@@ -6,9 +6,9 @@ export function converterEngToPtBr(data: UserTypeEng): UserTypePtBr {
     nome: data.name,
     email: data.email,
     senha: data.password,
-    telefone: data.phone,
-    cpf: data.cpf,
-    cep: data.cep,
+    telefone: data.phone.replace(/\D/g, ""),
+    cpf: data.cpf.replace(/\D/g, ""),
+    cep: data.cep.replace(/\D/g, ""),
     cidade: data.city,
     estado: data.state,
     endereco: data.address,
@@ -43,26 +43,25 @@ export function converterPtBrtoEng(data: UserTypePtBr): UserTypeEng {
 export function arrayConverterEngToPtBr(
   data: Array<UserTypeEng>
 ): Array<UserTypePtBr> {
-
-    const newArray: Array<UserTypePtBr> = [];
+  const newArray: Array<UserTypePtBr> = [];
 
   data.forEach((element) => {
     let newData = {
-        id: element.id,
-        nome: element.name,
-        email: element.email,
-        senha: element.password,
-        telefone: element.phone,
-        cpf: element.cpf,
-        cep: element.cep,
-        cidade: element.city,
-        estado: element.state,
-        endereco: element.address,
-        bairro: element.neighborhood,
-        numero: element.houseNumber,
-        perfils_id: element.profile,
-        created_at: element.created_at,
-        updated_at: element.updated_at,
+      id: element.id,
+      nome: element.name,
+      email: element.email,
+      senha: element.password,
+      telefone: element.phone.replace(/\D/g, ""),
+      cpf: element.cpf.replace(/\D/g, ""),
+      cep: element.cep.replace(/\D/g, ""),
+      cidade: element.city,
+      estado: element.state,
+      endereco: element.address,
+      bairro: element.neighborhood,
+      numero: element.houseNumber,
+      perfils_id: element.profile,
+      created_at: element.created_at,
+      updated_at: element.updated_at,
     };
     newArray.push(newData);
   });
@@ -124,3 +123,21 @@ export interface tokenClient {
   created_at?: null;
   updated_at?: null;
 }
+
+export const defaultUserFormData:UserTypeEng = {
+  id: undefined,
+  name: "",
+  email: "",
+  password: "",
+  phone: "",
+  cpf: "",
+  cep: "",
+  city: "",
+  state: "",
+  address: "",
+  neighborhood: "",
+  houseNumber: "",
+  profile: "",
+  created_at: undefined,
+  updated_at: undefined,
+};

@@ -29,36 +29,52 @@ import {
   MdOutlineLocationCity,
   MdOutlineStreetview,
   MdOutlineHouse,
+  MdLockOutline,
 } from "react-icons/md";
 import { Footer, Header } from "../../components";
 import { useForm } from "react-hook-form";
 import { ClientContext } from "../../contexts";
 import { CheckIcon } from "@chakra-ui/icons";
 import uf from "../../assets/uf.json";
+import { defaultUserFormData } from "../../utils/client";
 export default function Form() {
-  const { cep, perfil, getCepData, createUser, getProfile } =
-    useContext(ClientContext);
+  const {
+    cep,
+    perfil,
+    getCepData,
+    createUser,
+    getProfile,
+    editUser,
+    clientToEdit,
+    setClientToEdit,
+  } = useContext(ClientContext);
   const [disableButton, setDisableButton] = useState<boolean>(true);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [textButton, setTextButton] = useState<string>("Cadastrar");
+  const [requirePassword, setRequirePassword] = useState<string | boolean>(
+    "Preencha o campo de senha"
+  );
+
   const clickButtonShowPassword = () => setShowPassword(!showPassword);
   const toast = useToast();
-
   const {
     handleSubmit,
     register,
     setValue,
     getValues,
     watch,
+    reset,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm();
 
   async function onSubmit(data: any): Promise<void> {
-    createUser(data);
+    if (data.id) {
+      editUser(data);
+    } else {
+      createUser(data);
+    }
   }
-
-  useEffect(() => {
-    getProfile();
-  }, []);
 
   useEffect(() => {
     setValue("city", cep?.localidade ?? "", {
@@ -96,6 +112,31 @@ export default function Form() {
     }
   }, [watch()]);
 
+  useEffect(() => {
+    getProfile();
+    if (clientToEdit?.id) {
+      setTextButton("Editar");
+      setRequirePassword(false);
+      setValue("id", clientToEdit?.id);
+      setValue("name", clientToEdit?.name);
+      setValue("phone", clientToEdit?.phone);
+      setValue("cpf", clientToEdit?.cpf);
+      setValue("cep", clientToEdit?.cep, { shouldValidate: false });
+      setValue("city", clientToEdit?.city);
+      setValue("state", clientToEdit?.state);
+      setValue("address", clientToEdit?.address);
+      setValue("neighborhood", clientToEdit?.neighborhood);
+      setValue("houseNumber", clientToEdit?.houseNumber);
+      setValue("email", clientToEdit?.email);
+      setValue("profile", clientToEdit?.profile);
+    }
+
+    return () => {
+      reset()
+      setClientToEdit(defaultUserFormData)
+    };
+  }, []);
+  
   return (
     <>
       <Header />
@@ -125,6 +166,12 @@ export default function Form() {
                 >
                   <VStack spacing={1}>
                     <form onSubmit={handleSubmit(onSubmit)}>
+                      <Input
+                        id="id"
+                        display={"none"}
+                        placeholder="Seu Nome"
+                        {...register("id")}
+                      />
                       <Wrap spacing={5}>
                         <WrapItem w={"250px"} h={"100px"}>
                           <FormControl isInvalid={errors.name}>
@@ -374,13 +421,13 @@ export default function Form() {
                             <FormLabel>Senha</FormLabel>
                             <InputGroup>
                               <InputLeftElement>
-                                <MdOutlineEmail />
+                                <MdLockOutline />
                               </InputLeftElement>
                               <Input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Sua Senha"
                                 {...register("password", {
-                                  required: "Preencha o campo de senha",
+                                  required: requirePassword,
                                 })}
                               />
                               <InputRightElement width="4.5rem">
@@ -440,7 +487,7 @@ export default function Form() {
                           bg: "blue.500",
                         }}
                       >
-                        Cadastrar
+                        {textButton}
                       </Button>
                     </form>
                   </VStack>

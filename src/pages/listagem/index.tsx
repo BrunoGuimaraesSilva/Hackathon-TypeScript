@@ -1,4 +1,6 @@
 import {
+  Button,
+  ButtonGroup,
   Flex,
   Table,
   TableCaption,
@@ -9,26 +11,40 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 import { Header } from "../../components";
-import { ClientContext } from "../../contexts";
-import { capitalize,formatCep,formatCpf,formatPhone  } from './../../utils/index';
+import { ClientContext, UserTypeEng } from "../../contexts";
+import {
+  capitalize,
+  formatCep,
+  formatCpf,
+  formatPhone,
+} from "./../../utils/index";
+import { GButton } from "./../../components/Button/GButton";
 
 export default function Listagem() {
   const router = useRouter();
-  const { users, getAllUsers } = useContext(ClientContext);
+  const { users, getAllUsers, setClientToEdit } = useContext(ClientContext);
   useEffect(() => {
     getAllUsers();
   }, []);
+
+  function handleClickEditar(data: UserTypeEng): void {
+    setClientToEdit(data)
+    router.push('/cadastro')
+  }
+  function handleClickApagar(data: UserTypeEng): void {
+    console.log(data)
+  }
+
   return (
     <>
       <Header />
       <Flex>
         <TableContainer>
-          <Table size='lg' variant="simple">
+          <Table size="lg" variant="simple">
             <TableCaption>Clientes Cadastrados</TableCaption>
             <Thead>
               <Tr>
@@ -54,6 +70,28 @@ export default function Listagem() {
                     <Td>{formatCep(data.cep)}</Td>
                     <Td>{capitalize(data.city)}</Td>
                     <Td>{capitalize(data.state)}</Td>
+                    <Td>
+                      {
+                        <ButtonGroup size="sm" isAttached variant="outline">
+                          <GButton
+                            colorScheme="yellow"
+                            onClick={():void => {
+                              handleClickEditar(data);
+                            }}
+                          >
+                            Editar
+                          </GButton>
+                          <GButton
+                            colorScheme="red"
+                            onClick={():void => {
+                              handleClickApagar(data);
+                            }}
+                          >
+                            Apagar
+                          </GButton>
+                        </ButtonGroup>
+                      }
+                    </Td>
                   </Tr>
                 );
               })}

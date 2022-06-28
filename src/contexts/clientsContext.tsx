@@ -11,17 +11,18 @@ import {
 } from "./clientsContext.interface";
 import { setCookie } from "nookies";
 import { useToast } from "@chakra-ui/react";
-import { arrayConverterPtBrtoEng } from "../utils/client";
+import { arrayConverterPtBrtoEng, converterEngToPtBr, defaultUserFormData } from "../utils/client";
 export const ClientContext = createContext({} as InterClientContext);
 
 export function ClientProvider({ children }: InterProviderProps) {
   const toast = useToast();
-
+  const urlApi: String = "https://pesquisa-satisfacao-api.herokuapp.com/api";
   const router = useRouter();
   const [cep, setCep] = useState<CepResponseType>();
   const [perfil, setPerfil] = useState<Array<PerfilResponseType>>();
   const [users, setUsers] = useState<Array<UserTypeEng>>();
-  const urlApi: String = "https://pesquisa-satisfacao-api.herokuapp.com/api";
+  const [clientToEdit, setClientToEdit ] = useState<UserTypeEng>();
+
 
   async function getProfile(): Promise<void> {
     try {
@@ -64,21 +65,8 @@ export function ClientProvider({ children }: InterProviderProps) {
   }
 
   async function createUser(data: UserTypeEng): Promise<void> {
-    const body = {
-      nome: data.name,
-      email: data.email,
-      senha: data.password,
-      telefone: data.phone.replace(/\D/g, ""),
-      cpf: data.cpf.replace(/\D/g, ""),
-      cep: data.cep.replace(/\D/g, ""),
-      cidade: data.city,
-      estado: data.state,
-      endereco: data.address,
-      bairro: data.neighborhood,
-      numero: data.houseNumber,
-      perfils_id: data.profile,
-    };
 
+    const body = converterEngToPtBr(data) 
     axios
       .post(`${urlApi}/clientes`, body)
       .then((res): void => {
@@ -88,6 +76,33 @@ export function ClientProvider({ children }: InterProviderProps) {
         toast({
           title: "Erro",
           description: error.response.data ?? "Erro ao Cadastrar",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
+  }
+
+  async function editUser(data: UserTypeEng): Promise<void> {
+    const body = converterEngToPtBr(data) 
+
+    axios
+      .put(`${urlApi}/clientes/${data.id}`, body)
+      .then((res): void => {
+        setClientToEdit(defaultUserFormData)
+        router.push("/dashboard");
+        toast({
+          title: "Sucesso",
+          description: res.data ?? "Sucesso",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+      })
+      .catch(function (error) {
+        toast({
+          title: "Erro",
+          description: error.response.data ?? "Erro ao buscar",
           status: "error",
           duration: 5000,
           isClosable: true,
@@ -113,20 +128,8 @@ export function ClientProvider({ children }: InterProviderProps) {
       });
   }
 
-  async function editUser(data: UserTypeEng): Promise<void> {
-    axios
-      .get(`${urlApi}/clientes`)
-      .then((res): void => {})
-      .catch(function (error) {
-        toast({
-          title: "Erro",
-          description: error.response.data ?? "Erro ao buscar",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      });
-  }
+  
+
 
   return (
     <ClientContext.Provider
@@ -134,10 +137,13 @@ export function ClientProvider({ children }: InterProviderProps) {
         cep,
         perfil,
         users,
+        clientToEdit,
+        setClientToEdit,
         getCepData,
         getAllUsers,
         login,
         createUser,
+        editUser,
         getProfile,
       }}
     >
