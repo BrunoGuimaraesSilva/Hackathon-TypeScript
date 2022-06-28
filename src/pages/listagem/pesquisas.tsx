@@ -22,33 +22,33 @@ import {
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Header } from "../../components";
-import { ClientContext, UserTypeEng } from "../../contexts";
+import { SearchTypeEng } from "../../contexts";
 import {
   capitalize,
-  formatCep,
-  formatCpf,
-  formatPhone,
 } from "./../../utils/index";
 import { GButton } from "./../../components/Button/GButton";
+import { SearchContext } from "./../../contexts/searchContext";
+import { MdLockOpen, MdLockOutline } from "react-icons/md";
 
-export default function Listagem() {
+export default function Pesquisas() {
   const router = useRouter();
-  const { users, getAllUsers, setClientToEdit, deleteUser } = useContext(ClientContext);
+  const { allSearchs, getAllSearchs, setSearchToEdit, deleteSearch } =
+    useContext(SearchContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [ idDeleteUser, setIdDeleteUser ] = useState<number>()
+  const [idDeleteSearch, setIdDeleteSearch] = useState<number>(0);
 
   useEffect(() => {
-    getAllUsers();
+    getAllSearchs();
   }, []);
 
-  function handleClickEditar(data: UserTypeEng): void {
-    setClientToEdit(data);
-    router.push("/cadastro");
+  function handleClickEditar(data: SearchTypeEng): void {
+    setSearchToEdit(data);
+    router.push("/cadastro/pesquisa");
   }
 
-  function handleClickApagar(data: UserTypeEng): void {
-    onOpen()
-    setIdDeleteUser(data?.id ? data.id : 0)
+  function handleClickApagar(data: SearchTypeEng): void {
+    onOpen();
+    setIdDeleteSearch(data?.id ? data.id : 0);
   }
 
   return (
@@ -56,17 +56,25 @@ export default function Listagem() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Apagar o usuário</ModalHeader>
+          <ModalHeader>Apagar a pesquisa</ModalHeader>
           <ModalBody pb={6}>
-          <Text fontWeight='bold' mb='1rem'>
-              Tem certeza que deseja apagar o usuário?
+            <Text fontWeight="bold" mb="1rem">
+              Tem certeza que deseja apagar a pesquisa?
             </Text>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="red" onClick={():Promise<void> => (onClose(), deleteUser(idDeleteUser))} mr={3}>
+            <Button
+              colorScheme="red"
+              onClick={(): Promise<void> => (
+                onClose(), deleteSearch(idDeleteSearch)
+              )}
+              mr={3}
+            >
               Sim
             </Button>
-            <Button colorScheme="blue" onClick={onClose}>Não</Button>
+            <Button colorScheme="blue" onClick={onClose}>
+              Não
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -75,31 +83,26 @@ export default function Listagem() {
       <Flex>
         <TableContainer>
           <Table size="lg" variant="simple">
-            <TableCaption>Clientes Cadastrados</TableCaption>
+            <TableCaption>Pesquisas Cadastradas</TableCaption>
             <Thead>
               <Tr>
                 <Td isNumeric>Id</Td>
-                <Td>Nome</Td>
-                <Td>E-Mail</Td>
-                <Td>Telefone</Td>
-                <Td>CPF</Td>
-                <Td>CEP</Td>
-                <Td>Cidade</Td>
-                <Td>Perfil</Td>
+                <Td>Tema</Td>
+                <Td>Conteúdo</Td>
+                <Td>Ativa</Td>
+                <Td>Ação</Td>
               </Tr>
             </Thead>
             <Tbody>
-              {users?.map((data) => {
+              {allSearchs?.map((data) => {
                 return (
                   <Tr key={data.id} id={`${data.id}`}>
                     <Td isNumeric>{data.id}</Td>
-                    <Td>{capitalize(data.name)}</Td>
-                    <Td>{data.email}</Td>
-                    <Td>{formatPhone(data.phone)}</Td>
-                    <Td>{formatCpf(data.cpf)}</Td>
-                    <Td>{formatCep(data.cep)}</Td>
-                    <Td>{capitalize(data.city)}</Td>
-                    <Td>{capitalize(data.state)}</Td>
+                    <Td>{capitalize(data.searchTheme)}</Td>
+                    <Td>{data.body}</Td>
+                    <Td>
+                      {data.status ? <MdLockOpen /> : <MdLockOutline />}
+                    </Td>
                     <Td>
                       {
                         <ButtonGroup size="sm" isAttached variant="outline">

@@ -37,7 +37,7 @@ import { ClientContext } from "../../contexts";
 import { CheckIcon } from "@chakra-ui/icons";
 import uf from "../../assets/uf.json";
 import { defaultUserFormData } from "../../utils/client";
-export default function Form() {
+export default function Usuario() {
   const {
     cep,
     perfil,

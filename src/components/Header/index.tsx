@@ -7,11 +7,22 @@ import {
   useDisclosure,
   Stack,
   Center,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  Button,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
+import {
+  HamburgerIcon,
+  CloseIcon,
+  AddIcon,
+  ChevronDownIcon,
+} from "@chakra-ui/icons";
 import Image from "next/image";
 import { GButton, GIconButton } from "../Button";
-import logo from '../../assets/logo.svg'
+import logo from "../../assets/logo.svg";
 import { useRouter } from "next/router";
 export const Header: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -30,7 +41,13 @@ export const Header: React.FC = () => {
             onClick={isOpen ? onClose : onOpen}
           />
           <Box w="full">
-            <Center justifyContent={"center"} w="70px">
+            <Center
+              onClick={() => {
+                router.push("/dashboard");
+              }}
+              justifyContent={"center"}
+              w="70px"
+            >
               <Image alt="" src={logo} />
             </Center>
           </Box>
@@ -40,12 +57,72 @@ export const Header: React.FC = () => {
             alignItems={"center"}
           >
             <Box display={{ base: "none", md: "unset" }}>
-              
-            <Stack direction='row' spacing={4} align='center'>
+              <Stack direction="row" spacing={4} align="center">
+                <Menu key={1}>
+                  <MenuButton
+                    key={1.1}
+                    as={Button}
+                    transition="all 0.2s"
+                    _hover={{ bg: "gray.400" }}
+                    _expanded={{ bg: "blue.400" }}
+                    _focus={{ boxShadow: "outline" }}
+                  >
+                    Pesquisas <ChevronDownIcon />
+                  </MenuButton>
+                  <MenuList key={2}>
+                    <MenuItem
+                      key={3.3}
+                      onClick={() => {
+                        router.push("/cadastro/pesquisa");
+                      }}
+                    >
+                      Cadastro
+                    </MenuItem>
 
-              <GButton onClick={() => {router.push('/cadastro')}}>Cadastrar</GButton>
-              <GButton onClick={() => {router.push('/dashboard')}}>Dashboard</GButton>
-              <GButton onClick={() => {router.push('/listagem')}}>Lista</GButton>
+                    <MenuDivider />
+                    <MenuItem
+                      key={2.2}
+                      onClick={() => {
+                        router.push("/listagem/pesquisas");
+                      }}
+                    >
+                      Listagem
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+
+                <Menu>
+                  <MenuButton
+                    key={3}
+                    as={Button}
+                    transition="all 0.2s"
+                    _hover={{ bg: "gray.400" }}
+                    _expanded={{ bg: "blue.400" }}
+                    _focus={{ boxShadow: "outline" }}
+                  >
+                    Usuário <ChevronDownIcon />
+                  </MenuButton>
+                  <MenuList key={3.1}>
+                    <MenuItem
+                      key={3.2}
+                      onClick={() => {
+                        router.push("/cadastro/usuario");
+                      }}
+                    >
+                      Cadastro
+                    </MenuItem>
+                    <MenuDivider />
+
+                    <MenuItem
+                      key={2.1}
+                      onClick={() => {
+                        router.push("/listagem/usuarios");
+                      }}
+                    >
+                      Listagem
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
               </Stack>
             </Box>
           </Box>
@@ -55,11 +132,78 @@ export const Header: React.FC = () => {
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
               <Box zIndex={150} alignItems={"center"}>
-              <GButton mb={5} w={'full'} onClick={() => {router.push('/cadastro')}}>Cadastar</GButton>
-              <GButton mb={5} w={'full'} onClick={() => {router.push('/dashboard')}}>Dashboard</GButton>
-              <GButton mb={5} w={'full'} onClick={() => {router.push('/listagem')}}>Lista de Clientes</GButton>
+                <GButton
+                  mb={5}
+                  w={"full"}
+                  onClick={() => {
+                    router.push("/dashboard");
+                  }}
+                >
+                  Dashboard
+                </GButton>
 
-
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    mb={5}
+                    w={"full"}
+                    transition="all 0.2s"
+                    _hover={{ bg: "gray.400" }}
+                    _expanded={{ bg: "blue.400" }}
+                    _focus={{ boxShadow: "outline" }}
+                  >
+                    Listas <ChevronDownIcon />
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem
+                      w={"full"}
+                      onClick={() => {
+                        router.push("/listagem/usuarios");
+                      }}
+                    >
+                      Usuários
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem
+                      w={"full"}
+                      onClick={() => {
+                        router.push("/listagem/pesquisas");
+                      }}
+                    >
+                      Pesquisas
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    transition="all 0.2s"
+                    mb={5}
+                    w={"full"}
+                    _hover={{ bg: "gray.400" }}
+                    _expanded={{ bg: "blue.400" }}
+                    _focus={{ boxShadow: "outline" }}
+                  >
+                    Cadastro <ChevronDownIcon />
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem
+                      onClick={() => {
+                        router.push("/cadastro");
+                      }}
+                    >
+                      Usuários
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem
+                      onClick={() => {
+                        router.push("/listagem");
+                      }}
+                    >
+                      Pesquisas
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
               </Box>
             </Stack>
           </Box>

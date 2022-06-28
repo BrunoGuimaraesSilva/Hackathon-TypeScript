@@ -1,11 +1,11 @@
-export const capitalize = (str: string):string => {
+export const capitalize = (str: string|undefined):string => {
   if (str) {
     return str[0].toUpperCase() + str.slice(1);
   }
   return "";
 };
 
-export const formatCpf = (cpf: string):string => {
+export const formatCpf = (cpf: string|undefined):string => {
   if (cpf) {
     cpf = cpf.replace(/[^\d]/g, "");
     return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
@@ -13,7 +13,7 @@ export const formatCpf = (cpf: string):string => {
   return "";
 };
 
-export const formatCep = (cep: string):string => {
+export const formatCep = (cep: string|undefined):string => {
   if (cep) {
     cep = cep.replace(/[^\d]/g, "");
     return cep.replace(/^([\d]{2})\.*([\d]{3})-*([\d]{3})/, "$1$2-$3");
@@ -21,7 +21,7 @@ export const formatCep = (cep: string):string => {
   return "";
 };
 
-export const formatPhone = (phone: string):string => {
+export const formatPhone = (phone: string|undefined):string => {
   if (phone) {
     phone = phone.replace(/[^0-9]/g, "").slice(0, 11);  
     return phone.replace(/^([0-9]{2})([0-9]{4,5})([0-9]{4})$/, "($1) $2-$3");

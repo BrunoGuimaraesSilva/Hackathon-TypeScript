@@ -11,7 +11,7 @@ import {
 } from "./clientsContext.interface";
 import { parseCookies, setCookie } from "nookies";
 import { useToast } from "@chakra-ui/react";
-import { arrayConverterPtBrtoEng, converterEngToPtBr, defaultUserFormData } from "../utils/client";
+import { arrayConverterPtBrtoEng, converterEngToPtBr, converterPtBrtoEng, defaultUserFormData } from "../utils/client";
 export const ClientContext = createContext({} as InterClientContext);
 
 export function ClientProvider({ children }: InterProviderProps) {
@@ -21,6 +21,7 @@ export function ClientProvider({ children }: InterProviderProps) {
   const [cep, setCep] = useState<CepResponseType>();
   const [perfil, setPerfil] = useState<Array<PerfilResponseType>>();
   const [users, setUsers] = useState<Array<UserTypeEng>>();
+  const [user, setUser] = useState<UserTypeEng>();
   const [clientToEdit, setClientToEdit ] = useState<UserTypeEng>();
   const cookies = parseCookies();
   const token = cookies.token;
@@ -155,6 +156,25 @@ export function ClientProvider({ children }: InterProviderProps) {
     });
   }
 
+  async function getUserById(id: number): Promise<void> {
+    axios
+      .get(`${urlApi}/clientes/${id}`, config)
+      .then((res):void => {
+        const data: UserTypePtBr = res.data;
+        const dataConverter = converterPtBrtoEng(data)
+        setUser(dataConverter);
+      })
+      .catch(function (error) {
+        toast({
+          title: "Erro",
+          description: error.response.data ?? "Erro ao buscar",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
+  }
+
   return (
     <ClientContext.Provider
       value={{
@@ -162,14 +182,16 @@ export function ClientProvider({ children }: InterProviderProps) {
         perfil,
         users,
         clientToEdit,
+        user,
         setClientToEdit,
         getCepData,
         getAllUsers,
+        getProfile,
+        getUserById,
         login,
         createUser,
         editUser,
         deleteUser,
-        getProfile,
       }}
     >
       {children}

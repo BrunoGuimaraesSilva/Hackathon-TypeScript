@@ -9,6 +9,7 @@ export interface InterClientContext {
   perfil?: Array<PerfilResponseType>;
   users?: Array<UserTypeEng>;
   clientToEdit?: UserTypeEng;
+  user?: UserTypeEng;
   setClientToEdit(dados: UserTypeEng):void;
   getCepData(dados: number): Promise<void>;
   getAllUsers(): Promise<void>;
@@ -16,6 +17,7 @@ export interface InterClientContext {
   createUser(data: UserTypeEng): Promise<void>;
   editUser(data: UserTypeEng): Promise<void>;
   deleteUser(id: number): Promise<void>;
+  getUserById(id: number): Promise<void>;
   getProfile(): Promise<void>;
   
 }
