@@ -45,7 +45,7 @@ export interface UserTypeEng {
   id?: number;
   name: string;
   email: string;
-  password: string;
+  password?: string;
   phone: string;
   cpf: string;
   cep: string;
@@ -63,7 +63,7 @@ export interface UserTypePtBr {
   id?: number;
   nome: string;
   email: string;
-  senha: string;
+  senha?: string;
   telefone: string;
   cpf: string;
   cep: string;

@@ -95,7 +95,7 @@ export function SearchProvider({ children }: SearchProviderProps) {
 
   async function deleteSearch(id: number): Promise<void> {
     axios
-      .delete(`${urlApi}/clientes/${id}`, config)
+      .delete(`${urlApi}/pesquisas/${id}`, config)
       .then((res): void => {
         getAllSearchs();
         toast({

@@ -1,11 +1,10 @@
 import { UserTypeEng, UserTypePtBr } from "../contexts";
 
 export function converterEngToPtBr(data: UserTypeEng): UserTypePtBr {
-  return {
+  let array: UserTypePtBr = {
     id: data.id,
     nome: data.name,
     email: data.email,
-    senha: data.password,
     telefone: data.phone.replace(/\D/g, ""),
     cpf: data.cpf.replace(/\D/g, ""),
     cep: data.cep.replace(/\D/g, ""),
@@ -18,6 +17,15 @@ export function converterEngToPtBr(data: UserTypeEng): UserTypePtBr {
     created_at: data.created_at,
     updated_at: data.updated_at,
   };
+
+  if(data.password !== ''){
+    array = {
+      senha: data.password,
+      ...array
+    }
+  }
+  
+  return array
 }
 
 export function converterPtBrtoEng(data: UserTypePtBr): UserTypeEng {
