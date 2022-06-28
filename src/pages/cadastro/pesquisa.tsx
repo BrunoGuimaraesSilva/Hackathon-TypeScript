@@ -82,7 +82,6 @@ export default function Pesquisa() {
       };
     }, []);
 
-  console.log(watch());
   return (
     <>
       <Header />

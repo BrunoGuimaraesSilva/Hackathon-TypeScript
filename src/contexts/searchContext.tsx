@@ -5,8 +5,7 @@ import {
   InterSearchContext,
   SearchProviderProps,
   SearchTypeEng,
-  SearchTypePtBr,
-  SearchTypeWithClientEng,
+  SearchTypePtBr
 } from "./searchContext.interface";
 import { parseCookies, setCookie } from "nookies";
 import { useToast } from "@chakra-ui/react";

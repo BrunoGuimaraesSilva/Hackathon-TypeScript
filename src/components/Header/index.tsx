@@ -142,65 +142,71 @@ export const Header: React.FC = () => {
                   Dashboard
                 </GButton>
 
-                <Menu>
+                <Menu key={1}>
                   <MenuButton
-                    as={Button}
+                    key={1.1}
                     mb={5}
-                    w={"full"}
+                    w={'full'}
+                    as={Button}
                     transition="all 0.2s"
                     _hover={{ bg: "gray.400" }}
                     _expanded={{ bg: "blue.400" }}
                     _focus={{ boxShadow: "outline" }}
                   >
-                    Listas <ChevronDownIcon />
+                    Pesquisas <ChevronDownIcon />
                   </MenuButton>
-                  <MenuList>
+                  <MenuList key={2}>
                     <MenuItem
-                      w={"full"}
+                      key={3.3}
                       onClick={() => {
-                        router.push("/listagem/usuarios");
+                        router.push("/cadastro/pesquisa");
                       }}
                     >
-                      Usuários
+                      Cadastro
                     </MenuItem>
+
                     <MenuDivider />
                     <MenuItem
-                      w={"full"}
+                      key={2.2}
                       onClick={() => {
                         router.push("/listagem/pesquisas");
                       }}
                     >
-                      Pesquisas
+                      Listagem
                     </MenuItem>
                   </MenuList>
                 </Menu>
+
                 <Menu>
                   <MenuButton
+                    key={3}
+                    w={'full'}
                     as={Button}
                     transition="all 0.2s"
-                    mb={5}
-                    w={"full"}
                     _hover={{ bg: "gray.400" }}
                     _expanded={{ bg: "blue.400" }}
                     _focus={{ boxShadow: "outline" }}
                   >
-                    Cadastro <ChevronDownIcon />
+                    Usuário <ChevronDownIcon />
                   </MenuButton>
-                  <MenuList>
+                  <MenuList key={3.1}>
                     <MenuItem
+                      key={3.2}
                       onClick={() => {
-                        router.push("/cadastro");
+                        router.push("/cadastro/usuario");
                       }}
                     >
-                      Usuários
+                      Cadastro
                     </MenuItem>
                     <MenuDivider />
+
                     <MenuItem
+                      key={2.1}
                       onClick={() => {
-                        router.push("/listagem");
+                        router.push("/listagem/usuarios");
                       }}
                     >
-                      Pesquisas
+                      Listagem
                     </MenuItem>
                   </MenuList>
                 </Menu>

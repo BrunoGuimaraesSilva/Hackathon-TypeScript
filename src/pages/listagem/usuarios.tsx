@@ -97,7 +97,7 @@ export default function Listagem() {
 
       <Modal key={2} isOpen={isOpenVisualizar} onClose={onCloseVisualizar}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent m={15}>
           <ModalHeader>Usuário</ModalHeader>
           <ModalBody pb={6}>
             <Box m={2}>

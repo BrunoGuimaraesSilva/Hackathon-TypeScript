@@ -1,6 +1,8 @@
 import {
+  Box,
   Button,
   ButtonGroup,
+  Divider,
   Flex,
   Modal,
   ModalBody,
@@ -11,6 +13,7 @@ import {
   Table,
   TableCaption,
   TableContainer,
+  Tag,
   Tbody,
   Td,
   Text,
@@ -23,9 +26,7 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Header } from "../../components";
 import { SearchTypeEng } from "../../contexts";
-import {
-  capitalize,
-} from "./../../utils/index";
+import { capitalize, formatCep, formatCpf } from "./../../utils/index";
 import { GButton } from "./../../components/Button/GButton";
 import { SearchContext } from "./../../contexts/searchContext";
 import { MdLockOpen, MdLockOutline } from "react-icons/md";
@@ -35,7 +36,13 @@ export default function Pesquisas() {
   const { allSearchs, getAllSearchs, setSearchToEdit, deleteSearch } =
     useContext(SearchContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenVisualizar,
+    onOpen: onOpenVisualizar,
+    onClose: onCloseVisualizar,
+  } = useDisclosure();
   const [idDeleteSearch, setIdDeleteSearch] = useState<number>(0);
+  const [searchData, setSearchData] = useState<SearchTypeEng>();
 
   useEffect(() => {
     getAllSearchs();
@@ -49,6 +56,11 @@ export default function Pesquisas() {
   function handleClickApagar(data: SearchTypeEng): void {
     onOpen();
     setIdDeleteSearch(data?.id ? data.id : 0);
+  }
+
+  function handleClickVisualizar(data: SearchTypeEng): void {
+    onOpenVisualizar();
+    setSearchData(data);
   }
 
   return (
@@ -79,6 +91,50 @@ export default function Pesquisas() {
         </ModalContent>
       </Modal>
 
+      <Modal key={2} isOpen={isOpenVisualizar} onClose={onCloseVisualizar}>
+        <ModalOverlay />
+        <ModalContent m={15}>
+          <ModalHeader>Usuário</ModalHeader>
+          <ModalBody pb={6}>
+            <Box m={2}>
+              <Text>
+                Tema: <Tag>{capitalize(searchData?.searchTheme)}</Tag>
+              </Text>
+            </Box>
+            <Box m={2}>
+              <Text>
+                Nome: <Tag>{capitalize(searchData?.name)}</Tag>
+              </Text>
+            </Box>
+            <Box m={2}>
+              <Text>
+                E-mail: <Tag>{searchData?.email}</Tag>
+              </Text>
+            </Box>
+            <Box m={2}>
+              <Text>
+                CPF: <Tag>{formatCpf(searchData?.cpf)}</Tag>
+              </Text>
+            </Box>
+            <Box m={2}>
+              <Text>
+                Conteúdo: <Tag>{searchData?.body}</Tag>
+              </Text>
+            </Box>
+            <Box m={2}>
+              <Text>
+                Status: <Tag>{searchData?.status ? "Ativo" : "Inativo"}</Tag>
+              </Text>
+            </Box>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" onClick={onCloseVisualizar}>
+              Fechar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       <Header />
       <Flex>
         <TableContainer>
@@ -88,6 +144,8 @@ export default function Pesquisas() {
               <Tr>
                 <Td isNumeric>Id</Td>
                 <Td>Tema</Td>
+                <Td>Nome</Td>
+                <Td>E-mail</Td>
                 <Td>Conteúdo</Td>
                 <Td>Ativa</Td>
                 <Td>Ação</Td>
@@ -99,13 +157,21 @@ export default function Pesquisas() {
                   <Tr key={data.id} id={`${data.id}`}>
                     <Td isNumeric>{data.id}</Td>
                     <Td>{capitalize(data.searchTheme)}</Td>
+                    <Td>{capitalize(data.name)}</Td>
+                    <Td>{data.email}</Td>
                     <Td>{data.body}</Td>
-                    <Td>
-                      {data.status ? <MdLockOpen /> : <MdLockOutline />}
-                    </Td>
+                    <Td>{data.status ? <MdLockOpen /> : <MdLockOutline />}</Td>
                     <Td>
                       {
                         <ButtonGroup size="sm" isAttached variant="outline">
+                          <GButton
+                            colorScheme="blue"
+                            onClick={(): void => {
+                              handleClickVisualizar(data);
+                            }}
+                          >
+                            Visualizar
+                          </GButton>
                           <GButton
                             colorScheme="yellow"
                             onClick={(): void => {

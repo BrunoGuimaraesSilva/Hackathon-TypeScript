@@ -7,7 +7,7 @@ export interface SearchProviderProps {
 export interface InterSearchContext {
   allSearchs?: Array<SearchTypeEng>;
   SearchToEdit?: SearchTypeEng;
-  setSearchToEdit(dados: SearchTypeEng):void;
+  setSearchToEdit(dados: SearchTypeEng): void;
   getAllSearchs(): Promise<void>;
   createSearch(dados: SearchTypeEng): Promise<void>;
   editSearch(dados: SearchTypeEng): Promise<void>;
@@ -20,18 +20,9 @@ export interface SearchTypePtBr {
   conteudo: string;
   status: number;
   cliente_id: number;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface SearchTypeWithClientEng {
-  id?: number;
-  searchTheme: string;
-  body: string;
-  status: number;
-  clientId: number;
-  clientName?: string,
-  clientCpf?: string,
+  nome: string;
+  cpf: string;
+  email: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -42,6 +33,9 @@ export interface SearchTypeEng {
   body: string;
   status: boolean;
   clientId: number;
+  name: string;
+  cpf: string;
+  email: string;
   created_at?: string;
   updated_at?: string;
 }
