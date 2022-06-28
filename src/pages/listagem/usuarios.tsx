@@ -54,7 +54,7 @@ export default function Listagem() {
 
   function handleClickEditar(data: UserTypeEng): void {
     setClientToEdit(data);
-    router.push("/cadastro/pesquisa");
+    router.push("/cadastro/usuario");
   }
 
   function handleClickApagar(data: UserTypeEng): void {
