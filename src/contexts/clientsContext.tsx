@@ -53,7 +53,7 @@ export function ClientProvider({ children }: InterProviderProps) {
         senha: password,
       })
       .then((res): void => {
-        setCookie(null, "token", res.data, {
+        setCookie(null, "token", res.data.token, {
           maxAge: 30 * 24 * 60 * 60,
           path: "/",
         });
