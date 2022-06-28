@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { createContext, useState } from "react";
 import {
   InterSearchContext,
+  ReponseSearchTypeEng,
   SearchProviderProps,
   SearchTypeEng,
   SearchTypePtBr
@@ -13,6 +14,7 @@ import {
   arrayConverterSearchEngToPtBr,
   arrayConverterSearchPtBrtoEng,
   converterSearchEngToPtBr,
+  defaultReponseSearchFormData,
   defaultSearchFormData,
 } from "./../utils/search";
 import { TokenType } from "../utils/client";
@@ -27,6 +29,7 @@ export function SearchProvider({ children }: SearchProviderProps) {
   const urlApi: String = "https://pesquisa-satisfacao-api.herokuapp.com/api";
   const token = cookies.token;
   const [allSearchs, setAllSearchs] = useState<Array<SearchTypeEng>>();
+  const [reponseSearchs, setReponseSearchs] = useState<Array<ReponseSearchTypeEng>>();
   const [SearchToEdit, setSearchToEdit] = useState<SearchTypeEng>();
   let tokenDecode:any = {}
   if(token){
@@ -55,11 +58,38 @@ export function SearchProvider({ children }: SearchProviderProps) {
       });
   }
 
+  async function getSearchResponse(id: number): Promise<void> {
+    axios
+      .get(`${urlApi}/pesquisas/${id}/respostas`, config)
+      .then((res): void => {
+        const data: Array<ReponseSearchTypeEng> = res.data;
+        setReponseSearchs(data);
+      })
+      .catch(function (error) {
+        setReponseSearchs(defaultReponseSearchFormData);
+        toast({
+          title: "Erro",
+          description: error.response.data ?? "Erro ao buscar",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
+  }
+
+
   async function createSearch(data: SearchTypeEng): Promise<void> {
     const body = converterSearchEngToPtBr(data);
     axios
       .post(`${urlApi}/clientes/${tokenDecode.client.id}/pesquisas`, body, config)
       .then((res): void => {
+        toast({
+          title: "Sucesso",
+          description: res.data ?? "Sucesso ao criar",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
         router.push("/dashboard");
       })
       .catch(function (error) {
@@ -122,6 +152,8 @@ export function SearchProvider({ children }: SearchProviderProps) {
       value={{
         allSearchs,
         SearchToEdit,
+        reponseSearchs,
+        getSearchResponse,
         setSearchToEdit,
         getAllSearchs,
         createSearch,

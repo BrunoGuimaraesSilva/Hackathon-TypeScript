@@ -33,7 +33,7 @@ import { MdLockOpen, MdLockOutline } from "react-icons/md";
 
 export default function Pesquisas() {
   const router = useRouter();
-  const { allSearchs, getAllSearchs, setSearchToEdit, deleteSearch } =
+  const { allSearchs, getAllSearchs, setSearchToEdit, deleteSearch, getSearchResponse, reponseSearchs } =
     useContext(SearchContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -59,6 +59,7 @@ export default function Pesquisas() {
   }
 
   function handleClickVisualizar(data: SearchTypeEng): void {
+    getSearchResponse(data.id ? data.id : 0 )
     onOpenVisualizar();
     setSearchData(data);
   }
@@ -126,6 +127,28 @@ export default function Pesquisas() {
                 Status: <Tag>{searchData?.status ? "Ativo" : "Inativo"}</Tag>
               </Text>
             </Box>
+            <TableContainer>
+              <Table size="sm">
+                <Thead>
+                  <Tr>
+                    <Th isNumeric>Id</Th>
+                    <Th>Resposta</Th>
+                    <Th>Nome</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                {reponseSearchs?.map((data) => {
+                return (
+                  <Tr key={data.id} id={`${data.id}`}>
+                    <Td isNumeric>{data.id}</Td>
+                    <Td>{capitalize(data.resposta)}</Td>
+                    <Td>{capitalize(data.nome)}</Td>
+                  </Tr>
+                );
+              })}
+                </Tbody>
+              </Table>
+            </TableContainer>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" onClick={onCloseVisualizar}>

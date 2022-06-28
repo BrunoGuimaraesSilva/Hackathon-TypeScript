@@ -16,10 +16,10 @@ export default function Loading() {
 
   return (
     <>
-      <Modal onClose={() => {}} isOpen={loading} isCentered>
+      <Modal  onClose={() => {}} isOpen={loading} isCentered>
         <ModalOverlay />
         <ModalContent alignItems={'center'} m={25} boxShadow={0} bg={"rgba(0,0,0,0)"}>
-          <Flex  height={'80%'} width={'80%'}>
+          <Flex height={'80%'} width={'80%'}>
 
           <Lottie animationData={loadingLogo}  />
           </Flex>

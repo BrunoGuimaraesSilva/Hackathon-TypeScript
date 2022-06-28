@@ -7,6 +7,8 @@ export interface SearchProviderProps {
 export interface InterSearchContext {
   allSearchs?: Array<SearchTypeEng>;
   SearchToEdit?: SearchTypeEng;
+  reponseSearchs?:Array<ReponseSearchTypeEng>;
+  getSearchResponse(id: number): Promise<void>;
   setSearchToEdit(dados: SearchTypeEng): void;
   getAllSearchs(): Promise<void>;
   createSearch(dados: SearchTypeEng): Promise<void>;
@@ -38,4 +40,13 @@ export interface SearchTypeEng {
   email: string;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface ReponseSearchTypeEng {
+  id?: number;
+  resposta: string;
+  pesquisa_id: number;
+  created_at: string;
+  updated_at: string;
+  nome: string;
 }
